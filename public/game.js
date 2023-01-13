@@ -1,27 +1,34 @@
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
 const BOARD_SIZE = 11;
 
-const a = 2 * Math.PI / 6;
-const r = 20;
+// Hexagon constants
+const angle = Math.PI / 3;
+const outer_radius = 20;
+const inner_radius = outer_radius * Math.sqrt(3) / 2;
 
 function drawHexagon(x, y, ctx) {
     ctx.beginPath();
     for (var i = 0; i < 6; i++) {
-        ctx.lineTo(x + r * Math.cos(a * i), y + r * Math.sin(a * i));
+        ctx.lineTo(x + outer_radius * Math.cos(angle * i), y + outer_radius * Math.sin(angle * i));
     }
     ctx.closePath();
     ctx.stroke();
 }
 
-function drawGrid(width, height, ctx) {
-    for (let y = r; y + r * Math.sin(a) < height; y += r * Math.sin(a)) {
-        for (let x = r, j = 0; x + r * (1 + Math.cos(a)) < width; x += r * (1 + Math.cos(a)), y += (-1) ** j++ * r * Math.sin(a)) {
-            drawHexagon(x, y, ctx);
+function drawGrid(x, y, size, ctx) {
+    for (let row = 0; row < size; row++) {
+        for (let col = 0, j = 0; col < size; col++, j++) {
+            drawHexagon(x + col * 1.5 * outer_radius, y + row * 2 * inner_radius - col * inner_radius, ctx);
         }
     }
 }
 
 function main() {
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    drawGrid(canvas.width, canvas.height, ctx);
+    let gridX = canvas.width / 2;
+    let gridY = canvas.height / 2;
+    gridX -= Math.floor(BOARD_SIZE / 2) * 1.5 * outer_radius;
+    gridY -= Math.floor(BOARD_SIZE / 2) * inner_radius;
+    drawGrid(gridX, gridY, BOARD_SIZE, ctx);
 }
