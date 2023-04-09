@@ -8,13 +8,16 @@ const angle = Math.PI / 3;
 const outer_radius = 20;
 const inner_radius = outer_radius * Math.sqrt(3) / 2;
 
-function drawHexagon(x, y, ctx) {
+function drawHexagon(x, y, ctx, fillColor = "#FFFFFF") {
+    ctx.strokeStyle = "#000000";
+    ctx.fillStyle = fillColor;
     ctx.beginPath();
     for (var i = 0; i < 6; i++) {
         ctx.lineTo(x + outer_radius * Math.cos(angle * i), y + outer_radius * Math.sin(angle * i));
     }
     ctx.closePath();
     ctx.stroke();
+    ctx.fill();
 }
 
 function drawGrid(x, y, size, ctx) {
@@ -24,6 +27,18 @@ function drawGrid(x, y, size, ctx) {
         }
     }
 }
+
+canvas.addEventListener("mousedown", function(evt) {
+    const x = evt.pageX;
+    const y = evt.pageY;
+
+    // convert x and y from page coordinates to canvas coordinates.
+    const canvasX = x - canvas.offsetLeft;
+    const canvasY = y - canvas.offsetTop;
+
+    console.log(`x: ${canvasX} y: ${canvasY}`);
+
+});
 
 function main() {
     let gridX = canvas.width / 2;
